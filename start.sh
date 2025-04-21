@@ -1,6 +1,7 @@
 #!/bin/bash
 
 # 启动后端
+echo "Starting backend server..."
 echo "启动后端服务器..."
 cd backend
 chmod +x start.sh
@@ -11,6 +12,7 @@ BACKEND_PID=$!
 sleep 3
 
 # 启动前端
+echo "Starting frontend server..."
 echo "启动前端服务器..."
 cd ../frontend
 chmod +x start.sh
@@ -18,8 +20,9 @@ chmod +x start.sh
 FRONTEND_PID=$!
 
 # 捕获 SIGINT 信号（Ctrl+C）
-trap "echo '正在关闭服务器...'; kill $BACKEND_PID $FRONTEND_PID; exit" INT
+trap "echo 'Shutting down servers... 正在关闭服务器...'; kill $BACKEND_PID $FRONTEND_PID; exit" INT
 
 # 保持脚本运行
+echo "Servers started. Press Ctrl+C to stop all servers."
 echo "服务器已启动。按 Ctrl+C 停止所有服务器。"
 wait
