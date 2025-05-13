@@ -12,6 +12,9 @@ import './style.css'
 // 配置 axios 默认值
 axios.defaults.baseURL = import.meta.env.VITE_API_URL || 'http://localhost:5173'
 
+// 注意：不在这里设置认证头部，而是在 App.vue 中的 onMounted 钩子中处理
+// 这样可以避免在应用初始化时出现闪烁问题
+
 // 创建 Pinia 存储
 const pinia = createPinia()
 
@@ -25,12 +28,3 @@ app.use(i18n)
 
 // 挂载应用
 app.mount('#app')
-
-// 导入认证存储以在应用启动时初始化
-import { useAuthStore } from './stores/auth'
-const authStore = useAuthStore()
-
-// 如果有令牌，尝试获取用户信息
-if (authStore.token) {
-  authStore.fetchUserInfo()
-}

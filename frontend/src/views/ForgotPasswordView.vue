@@ -5,80 +5,49 @@
         <v-col cols="12" sm="10" md="8" lg="6" xl="4">
           <v-card class="auth-card" elevation="0">
 
-            <!-- Login Form -->
+            <!-- Forgot Password Form -->
             <v-card-text class="px-6 pt-6 pb-4">
-              <h1 class="auth-title mb-2">{{ t('auth.login') }}</h1>
-              <p class="auth-subtitle mb-6">{{ t('auth.loginToAccount') || 'Login to access your account' }}</p>
+              <!-- Back to Login Link -->
+              <div class="d-flex align-center mb-4">
+                <v-btn
+                  icon
+                  variant="text"
+                  density="comfortable"
+                  class="mr-2"
+                  @click="router.push('/login')"
+                >
+                  <v-icon>mdi-chevron-left</v-icon>
+                </v-btn>
+                <span class="text-secondary">{{ t('auth.backToLogin') }}</span>
+              </div>
 
-              <v-form @submit.prevent="handleLogin" ref="form">
+              <h1 class="auth-title mb-2">{{ t('auth.forgotPasswordTitle') }}</h1>
+              <p class="auth-subtitle mb-6">{{ t('auth.forgotPasswordSubtitle') }}</p>
+
+              <v-form @submit.prevent="handleForgotPassword" ref="form">
                 <!-- Email Field -->
                 <v-text-field
-                  v-model="credentials.username"
+                  v-model="email"
                   :label="t('auth.email')"
                   variant="outlined"
                   density="comfortable"
-                  class="mb-4"
+                  class="mb-6"
                   hide-details="auto"
                   :rules="[v => !!v || t('auth.emailRequired')]"
                 ></v-text-field>
 
-                <!-- Password Field -->
-                <v-text-field
-                  v-model="credentials.password"
-                  :label="t('auth.password')"
-                  variant="outlined"
-                  density="comfortable"
-                  class="mb-2"
-                  hide-details="auto"
-                  :type="showPassword ? 'text' : 'password'"
-                  :rules="[v => !!v || t('auth.passwordRequired')]"
-                >
-                  <template v-slot:append-inner>
-                    <v-icon
-                      @click="showPassword = !showPassword"
-                      :icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
-                      color="secondary"
-                      size="small"
-                    ></v-icon>
-                  </template>
-                </v-text-field>
-
-                <!-- Remember Me and Forgot Password -->
-                <div class="d-flex justify-space-between align-center mb-6">
-                  <div class="d-flex align-center">
-                    <v-checkbox
-                      v-model="rememberMe"
-                      :label="t('auth.rememberMe')"
-                      color="primary"
-                      hide-details
-                      density="compact"
-                    ></v-checkbox>
-                  </div>
-                  <router-link to="/forgot-password" class="forgot-password-link text-decoration-none">
-                    {{ t('auth.forgotPassword') }}
-                  </router-link>
-                </div>
-
-                <!-- Login Button -->
+                <!-- Submit Button -->
                 <v-btn
                   color="primary"
                   type="submit"
                   block
                   :loading="authStore.loading"
                   :disabled="authStore.loading"
-                  class="mb-4"
+                  class="mb-6"
                   size="large"
                 >
-                  {{ t('auth.login') }}
+                  {{ t('auth.submit') }}
                 </v-btn>
-
-                <!-- Sign Up Link -->
-                <div class="text-center mb-6">
-                  <span class="text-secondary">{{ t('auth.dontHaveAccount') }}</span>
-                  <router-link to="/register" class="signup-link text-decoration-none ml-1">
-                    {{ t('auth.signUp') }}
-                  </router-link>
-                </div>
 
                 <!-- Or Login With Divider -->
                 <div class="auth-divider mb-6">
@@ -105,6 +74,24 @@
         </v-col>
       </v-row>
     </v-container>
+
+    <!-- Success Toast -->
+    <v-snackbar
+      v-model="showSuccessToast"
+      :timeout="3000"
+      color="success"
+      location="top"
+    >
+      {{ successMessage }}
+      <template v-slot:actions>
+        <v-btn
+          variant="text"
+          @click="showSuccessToast = false"
+        >
+          {{ t('common.close') }}
+        </v-btn>
+      </template>
+    </v-snackbar>
 
     <!-- Error Toast -->
     <v-snackbar
@@ -136,15 +123,11 @@ const router = useRouter()
 const authStore = useAuthStore()
 const { t } = useI18n()
 const form = ref<any>(null)
-const showPassword = ref(false)
 const showErrorToast = ref(false)
 const errorMessage = ref('')
-const rememberMe = ref(false)
-
-const credentials = ref({
-  username: '',
-  password: ''
-})
+const showSuccessToast = ref(false)
+const successMessage = ref('')
+const email = ref('')
 
 // Watch for auth store errors
 watch(() => authStore.error, (newError) => {
@@ -154,7 +137,7 @@ watch(() => authStore.error, (newError) => {
   }
 })
 
-async function handleLogin() {
+async function handleForgotPassword() {
   // Validate form
   const { valid } = await form.value.validate()
   if (!valid) {
@@ -164,10 +147,18 @@ async function handleLogin() {
     return
   }
 
-  // Attempt login
-  const success = await authStore.login(credentials.value)
+  // Attempt to request password reset
+  const success = await authStore.requestPasswordReset(email.value)
   if (success) {
-    router.push('/')
+    // Show success message
+    successMessage.value = 'Password reset link has been sent to your email'
+    showSuccessToast.value = true
+
+    // In a real application, you might redirect to a verification page
+    // For now, we'll just redirect back to login after a delay
+    setTimeout(() => {
+      router.push('/login')
+    }, 3000)
   }
 }
 </script>

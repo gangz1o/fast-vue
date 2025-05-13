@@ -1,13 +1,13 @@
 @import "tailwindcss";
 
 :root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  font-family: 'Poppins', system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
 
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
+  color-scheme: light;
+  color: #313131;
+  background-color: #FFFFFF;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -19,9 +19,94 @@ body {
   margin: 0;
   min-width: 320px;
   min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* 当访问认证页面时，禁止body滚动 */
+body.auth-page {
+  overflow: hidden;
 }
 
 #app {
   width: 100%;
   margin: 0 auto;
+}
+
+/* Custom classes for the Figma design */
+.auth-container {
+  display: flex;
+  height: 100vh;
+  background-color: #F6F6F6;
+  overflow: hidden; /* 禁止滚动 */
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+
+.auth-card {
+  border-radius: 12px;
+  box-shadow: 0px 4px 30px rgba(0, 0, 0, 0.12);
+  background-color: white;
+  overflow: hidden;
+}
+
+.auth-title {
+  font-weight: 600;
+  font-size: 24px;
+  color: #313131;
+}
+
+.auth-subtitle {
+  font-weight: 400;
+  font-size: 16px;
+  color: rgba(49, 49, 49, 0.75);
+}
+
+.auth-divider {
+  display: flex;
+  align-items: center;
+  margin: 20px 0;
+}
+
+.auth-divider-line {
+  flex-grow: 1;
+  height: 1px;
+  background-color: rgba(49, 49, 49, 0.25);
+}
+
+.auth-divider-text {
+  padding: 0 10px;
+  color: rgba(49, 49, 49, 0.5);
+  font-size: 14px;
+}
+
+.social-login-btn {
+  border: 1px solid rgba(49, 49, 49, 0.1);
+  border-radius: 4px;
+  padding: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+}
+
+.social-login-btn:hover {
+  background-color: rgba(141, 211, 187, 0.1);
+  border-color: #8DD3BB;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.forgot-password-link {
+  color: #8DD3BB;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.signup-link {
+  color: #8DD3BB;
+  text-decoration: none;
+  font-weight: 600;
 }

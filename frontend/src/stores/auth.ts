@@ -17,6 +17,12 @@ interface LoginCredentials {
   password: string
 }
 
+interface RegisterCredentials {
+  username: string
+  email: string
+  password: string
+}
+
 export const useAuthStore = defineStore('auth', () => {
   const router = useRouter()
   const { t } = useI18n()
@@ -69,14 +75,24 @@ export const useAuthStore = defineStore('auth', () => {
   }
 
   async function fetchUserInfo() {
-    if (!token.value) return
+    // 如果没有token，清除用户状态并返回Promise.reject
+    if (!token.value) {
+      user.value = null
+      return Promise.reject(new Error('No authentication token'))
+    }
 
     try {
       const response = await axios.get('/api/users/me')
       user.value = response.data
+      return user.value
     } catch (err) {
       console.error('Error fetching user info:', err)
-      logout()
+      // 静默处理错误，不自动登出，让调用者决定如何处理
+      user.value = null
+      token.value = null
+      localStorage.removeItem('token')
+      delete axios.defaults.headers.common['Authorization']
+      return Promise.reject(err)
     }
   }
 
@@ -88,6 +104,52 @@ export const useAuthStore = defineStore('auth', () => {
     router.push('/login')
   }
 
+  async function register(credentials: RegisterCredentials) {
+    loading.value = true
+    error.value = null
+
+    try {
+      // Register the user
+      await axios.post('/api/register', credentials)
+
+      // After successful registration, login with the new credentials
+      const loginSuccess = await login({
+        username: credentials.username,
+        password: credentials.password
+      })
+
+      return loginSuccess
+    } catch (err: any) {
+      console.error('Registration error:', err)
+      error.value = err.response?.data?.detail || t('auth.registerFailed')
+      return false
+    } finally {
+      loading.value = false
+    }
+  }
+
+  async function requestPasswordReset(email: string) {
+    loading.value = true
+    error.value = null
+
+    try {
+      // This is a mock function since we don't have a real backend endpoint for this
+      // In a real application, you would call an API endpoint
+      console.log('Password reset requested for:', email)
+
+      // Simulate API call delay
+      await new Promise(resolve => setTimeout(resolve, 1000))
+
+      return true
+    } catch (err: any) {
+      console.error('Password reset request error:', err)
+      error.value = err.response?.data?.detail || 'Failed to request password reset'
+      return false
+    } finally {
+      loading.value = false
+    }
+  }
+
   return {
     user,
     token,
@@ -97,6 +159,8 @@ export const useAuthStore = defineStore('auth', () => {
     isAdmin,
     login,
     logout,
+    register,
+    requestPasswordReset,
     fetchUserInfo
   }
 })

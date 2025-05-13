@@ -5,15 +5,15 @@
         <v-col cols="12" sm="10" md="8" lg="6" xl="4">
           <v-card class="auth-card" elevation="0">
 
-            <!-- Login Form -->
+            <!-- Register Form -->
             <v-card-text class="px-6 pt-6 pb-4">
-              <h1 class="auth-title mb-2">{{ t('auth.login') }}</h1>
-              <p class="auth-subtitle mb-6">{{ t('auth.loginToAccount') || 'Login to access your account' }}</p>
+              <h1 class="auth-title mb-2">{{ t('auth.register') }}</h1>
+              <p class="auth-subtitle mb-6">{{ t('auth.createAccount') || 'Create your account' }}</p>
 
-              <v-form @submit.prevent="handleLogin" ref="form">
+              <v-form @submit.prevent="handleRegister" ref="form">
                 <!-- Email Field -->
                 <v-text-field
-                  v-model="credentials.username"
+                  v-model="credentials.email"
                   :label="t('auth.email')"
                   variant="outlined"
                   density="comfortable"
@@ -22,13 +22,24 @@
                   :rules="[v => !!v || t('auth.emailRequired')]"
                 ></v-text-field>
 
+                <!-- Username Field -->
+                <v-text-field
+                  v-model="credentials.username"
+                  :label="t('auth.username')"
+                  variant="outlined"
+                  density="comfortable"
+                  class="mb-4"
+                  hide-details="auto"
+                  :rules="[v => !!v || t('auth.usernameRequired')]"
+                ></v-text-field>
+
                 <!-- Password Field -->
                 <v-text-field
                   v-model="credentials.password"
                   :label="t('auth.password')"
                   variant="outlined"
                   density="comfortable"
-                  class="mb-2"
+                  class="mb-4"
                   hide-details="auto"
                   :type="showPassword ? 'text' : 'password'"
                   :rules="[v => !!v || t('auth.passwordRequired')]"
@@ -43,23 +54,31 @@
                   </template>
                 </v-text-field>
 
-                <!-- Remember Me and Forgot Password -->
-                <div class="d-flex justify-space-between align-center mb-6">
-                  <div class="d-flex align-center">
-                    <v-checkbox
-                      v-model="rememberMe"
-                      :label="t('auth.rememberMe')"
-                      color="primary"
-                      hide-details
-                      density="compact"
-                    ></v-checkbox>
-                  </div>
-                  <router-link to="/forgot-password" class="forgot-password-link text-decoration-none">
-                    {{ t('auth.forgotPassword') }}
-                  </router-link>
-                </div>
+                <!-- Confirm Password Field -->
+                <v-text-field
+                  v-model="confirmPassword"
+                  :label="t('auth.confirmPassword')"
+                  variant="outlined"
+                  density="comfortable"
+                  class="mb-6"
+                  hide-details="auto"
+                  :type="showConfirmPassword ? 'text' : 'password'"
+                  :rules="[
+                    v => !!v || t('auth.confirmPasswordRequired'),
+                    v => v === credentials.password || t('auth.passwordsDoNotMatch')
+                  ]"
+                >
+                  <template v-slot:append-inner>
+                    <v-icon
+                      @click="showConfirmPassword = !showConfirmPassword"
+                      :icon="showConfirmPassword ? 'mdi-eye' : 'mdi-eye-off'"
+                      color="secondary"
+                      size="small"
+                    ></v-icon>
+                  </template>
+                </v-text-field>
 
-                <!-- Login Button -->
+                <!-- Register Button -->
                 <v-btn
                   color="primary"
                   type="submit"
@@ -69,18 +88,18 @@
                   class="mb-4"
                   size="large"
                 >
-                  {{ t('auth.login') }}
+                  {{ t('auth.register') }}
                 </v-btn>
 
-                <!-- Sign Up Link -->
+                <!-- Sign In Link -->
                 <div class="text-center mb-6">
-                  <span class="text-secondary">{{ t('auth.dontHaveAccount') }}</span>
-                  <router-link to="/register" class="signup-link text-decoration-none ml-1">
-                    {{ t('auth.signUp') }}
+                  <span class="text-secondary">{{ t('auth.alreadyHaveAccount') }}</span>
+                  <router-link to="/login" class="signup-link text-decoration-none ml-1">
+                    {{ t('auth.signIn') }}
                   </router-link>
                 </div>
 
-                <!-- Or Login With Divider -->
+                <!-- Or Register With Divider -->
                 <div class="auth-divider mb-6">
                   <div class="auth-divider-line"></div>
                   <div class="auth-divider-text">{{ t('auth.orLoginWith') }}</div>
@@ -137,12 +156,14 @@ const authStore = useAuthStore()
 const { t } = useI18n()
 const form = ref<any>(null)
 const showPassword = ref(false)
+const showConfirmPassword = ref(false)
 const showErrorToast = ref(false)
 const errorMessage = ref('')
-const rememberMe = ref(false)
+const confirmPassword = ref('')
 
 const credentials = ref({
   username: '',
+  email: '',
   password: ''
 })
 
@@ -154,7 +175,7 @@ watch(() => authStore.error, (newError) => {
   }
 })
 
-async function handleLogin() {
+async function handleRegister() {
   // Validate form
   const { valid } = await form.value.validate()
   if (!valid) {
@@ -164,8 +185,8 @@ async function handleLogin() {
     return
   }
 
-  // Attempt login
-  const success = await authStore.login(credentials.value)
+  // Attempt registration
+  const success = await authStore.register(credentials.value)
   if (success) {
     router.push('/')
   }

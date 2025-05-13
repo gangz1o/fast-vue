@@ -9,8 +9,22 @@ const vuetify = createVuetify({
   components,
   directives,
   theme: {
-    defaultTheme: 'light'
-  }
+    defaultTheme: 'light',
+    themes: {
+      light: {
+        colors: {
+          primary: '#8DD3BB', // Teal color from Figma
+          secondary: '#313131', // Dark text color from Figma
+          accent: '#FF8682', // Optional accent color
+          error: '#FF5252',
+          info: '#2196F3',
+          success: '#4CAF50',
+          warning: '#FFC107',
+          background: '#FFFFFF',
+        },
+      },
+    },
+  },
 })
 
 export default vuetify
