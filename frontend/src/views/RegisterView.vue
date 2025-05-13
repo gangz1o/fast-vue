@@ -4,11 +4,12 @@
       <v-row justify="center" align="center" class="h-100">
         <v-col cols="12" sm="10" md="8" lg="6" xl="4">
           <v-card class="auth-card" elevation="0">
-
             <!-- Register Form -->
             <v-card-text class="px-6 pt-6 pb-4">
               <h1 class="auth-title mb-2">{{ t('auth.register') }}</h1>
-              <p class="auth-subtitle mb-6">{{ t('auth.createAccount') || 'Create your account' }}</p>
+              <p class="auth-subtitle mb-6">
+                {{ t('auth.createAccount') || 'Create your account' }}
+              </p>
 
               <v-form @submit.prevent="handleRegister" ref="form">
                 <!-- Email Field -->
@@ -19,7 +20,7 @@
                   density="comfortable"
                   class="mb-4"
                   hide-details="auto"
-                  :rules="[v => !!v || t('auth.emailRequired')]"
+                  :rules="[(v) => !!v || t('auth.emailRequired')]"
                 ></v-text-field>
 
                 <!-- Username Field -->
@@ -30,7 +31,7 @@
                   density="comfortable"
                   class="mb-4"
                   hide-details="auto"
-                  :rules="[v => !!v || t('auth.usernameRequired')]"
+                  :rules="[(v) => !!v || t('auth.usernameRequired')]"
                 ></v-text-field>
 
                 <!-- Password Field -->
@@ -42,7 +43,7 @@
                   class="mb-4"
                   hide-details="auto"
                   :type="showPassword ? 'text' : 'password'"
-                  :rules="[v => !!v || t('auth.passwordRequired')]"
+                  :rules="[(v) => !!v || t('auth.passwordRequired')]"
                 >
                   <template v-slot:append-inner>
                     <v-icon
@@ -64,8 +65,8 @@
                   hide-details="auto"
                   :type="showConfirmPassword ? 'text' : 'password'"
                   :rules="[
-                    v => !!v || t('auth.confirmPasswordRequired'),
-                    v => v === credentials.password || t('auth.passwordsDoNotMatch')
+                    (v) => !!v || t('auth.confirmPasswordRequired'),
+                    (v) => v === credentials.password || t('auth.passwordsDoNotMatch'),
                   ]"
                 >
                   <template v-slot:append-inner>
@@ -109,10 +110,20 @@
                 <!-- Social Login Buttons -->
                 <div class="d-flex justify-space-between mb-4">
                   <v-btn variant="outlined" class="social-login-btn" width="30%" height="48">
-                    <img src="@/assets/images/facebook-icon.svg" alt="Facebook" width="32" height="32" />
+                    <img
+                      src="@/assets/images/facebook-icon.svg"
+                      alt="Facebook"
+                      width="32"
+                      height="32"
+                    />
                   </v-btn>
                   <v-btn variant="outlined" class="social-login-btn" width="30%" height="48">
-                    <img src="@/assets/images/google-icon.svg" alt="Google" width="32" height="32" />
+                    <img
+                      src="@/assets/images/google-icon.svg"
+                      alt="Google"
+                      width="32"
+                      height="32"
+                    />
                   </v-btn>
                   <v-btn variant="outlined" class="social-login-btn" width="30%" height="48">
                     <img src="@/assets/images/apple-icon.svg" alt="Apple" width="32" height="32" />
@@ -126,18 +137,10 @@
     </v-container>
 
     <!-- Error Toast -->
-    <v-snackbar
-      v-model="showErrorToast"
-      :timeout="3000"
-      color="error"
-      location="top"
-    >
+    <v-snackbar v-model="showErrorToast" :timeout="3000" color="error" location="top">
       {{ errorMessage }}
       <template v-slot:actions>
-        <v-btn
-          variant="text"
-          @click="showErrorToast = false"
-        >
+        <v-btn variant="text" @click="showErrorToast = false">
           {{ t('common.close') }}
         </v-btn>
       </template>
@@ -146,49 +149,52 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from 'vue'
-import { useRouter } from 'vue-router'
-import { useAuthStore } from '../stores/auth'
-import { useI18n } from 'vue-i18n'
+import { ref, watch } from 'vue';
+import { useRouter } from 'vue-router';
+import { useAuthStore } from '../stores/auth';
+import { useI18n } from 'vue-i18n';
 
-const router = useRouter()
-const authStore = useAuthStore()
-const { t } = useI18n()
-const form = ref<any>(null)
-const showPassword = ref(false)
-const showConfirmPassword = ref(false)
-const showErrorToast = ref(false)
-const errorMessage = ref('')
-const confirmPassword = ref('')
+const router = useRouter();
+const authStore = useAuthStore();
+const { t } = useI18n();
+const form = ref<any>(null);
+const showPassword = ref(false);
+const showConfirmPassword = ref(false);
+const showErrorToast = ref(false);
+const errorMessage = ref('');
+const confirmPassword = ref('');
 
 const credentials = ref({
   username: '',
   email: '',
-  password: ''
-})
+  password: '',
+});
 
 // Watch for auth store errors
-watch(() => authStore.error, (newError) => {
-  if (newError) {
-    errorMessage.value = newError
-    showErrorToast.value = true
-  }
-})
+watch(
+  () => authStore.error,
+  (newError) => {
+    if (newError) {
+      errorMessage.value = newError;
+      showErrorToast.value = true;
+    }
+  },
+);
 
 async function handleRegister() {
   // Validate form
-  const { valid } = await form.value.validate()
+  const { valid } = await form.value.validate();
   if (!valid) {
     // Show error message if validation fails
-    errorMessage.value = t('auth.fillAllFields')
-    showErrorToast.value = true
-    return
+    errorMessage.value = t('auth.fillAllFields');
+    showErrorToast.value = true;
+    return;
   }
 
   // Attempt registration
-  const success = await authStore.register(credentials.value)
+  const success = await authStore.register(credentials.value);
   if (success) {
-    router.push('/')
+    router.push('/');
   }
 }
 </script>

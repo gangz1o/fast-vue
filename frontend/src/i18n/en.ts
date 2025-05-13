@@ -44,7 +44,7 @@ export default {
     fillAllFields: 'Please fill in all required fields',
     rememberMe: 'Remember me',
     forgotPassword: 'Forgot Password',
-    dontHaveAccount: 'Don\'t have an account?',
+    dontHaveAccount: "Don't have an account?",
     signUp: 'Sign up',
     alreadyHaveAccount: 'Already have an account?',
     signIn: 'Sign in',
@@ -55,12 +55,13 @@ export default {
     registerFailed: 'Registration failed',
     backToLogin: 'Back to login',
     forgotPasswordTitle: 'Forgot your password?',
-    forgotPasswordSubtitle: 'Don\'t worry, happens to all of us. Enter your email below to recover your password',
+    forgotPasswordSubtitle:
+      "Don't worry, happens to all of us. Enter your email below to recover your password",
     submit: 'Submit',
     verifyCode: 'Verify code',
     verifyCodeSubtitle: 'An authentication code has been sent to your email.',
     enterCode: 'Enter Code',
-    didntReceiveCode: 'Didn\'t receive a code?',
+    didntReceiveCode: "Didn't receive a code?",
     resend: 'Resend',
     resetPassword: 'Reset Password',
     resetPasswordSubtitle: 'Enter your new password below',
@@ -102,7 +103,8 @@ export default {
     tailwind: 'Tailwind CSS: Utility-first CSS framework',
     pinia: 'Pinia: State management for Vue',
     vueRouter: 'Vue Router: Official router for Vue.js',
-    designedFor: 'This template is designed to help you quickly start new projects with a modern tech stack.',
+    designedFor:
+      'This template is designed to help you quickly start new projects with a modern tech stack.',
     backToHome: 'Back to Home',
   },
-}
+};

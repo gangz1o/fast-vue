@@ -35,12 +35,7 @@
               </p>
             </v-card-text>
             <v-card-actions>
-              <v-btn
-                color="primary"
-                variant="flat"
-                to="/"
-                class="mx-auto"
-              >
+              <v-btn color="primary" variant="flat" to="/" class="mx-auto">
                 {{ t('about.backToHome') }}
               </v-btn>
             </v-card-actions>
@@ -52,9 +47,9 @@
 </template>
 
 <script setup lang="ts">
-import { useI18n } from 'vue-i18n'
+import { useI18n } from 'vue-i18n';
 
-const { t } = useI18n()
+const { t } = useI18n();
 </script>
 
 <style scoped>

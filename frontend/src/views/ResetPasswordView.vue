@@ -4,7 +4,6 @@
       <v-row justify="center" align="center" class="h-100">
         <v-col cols="12" sm="10" md="8" lg="6" xl="4">
           <v-card class="auth-card" elevation="0">
-
             <!-- Verify Code Form -->
             <v-card-text v-if="!codeVerified" class="px-6 pt-6 pb-4">
               <!-- Back to Login Link -->
@@ -33,21 +32,21 @@
                   density="comfortable"
                   class="mb-2"
                   hide-details="auto"
-                  :rules="[v => !!v || 'Verification code is required']"
+                  :rules="[(v) => !!v || 'Verification code is required']"
                 >
                   <template v-slot:append-inner>
-                    <v-icon
-                      icon="mdi-eye"
-                      color="secondary"
-                      size="small"
-                    ></v-icon>
+                    <v-icon icon="mdi-eye" color="secondary" size="small"></v-icon>
                   </template>
                 </v-text-field>
 
                 <!-- Didn't receive code -->
                 <div class="text-center mb-6">
                   <span class="text-secondary">{{ t('auth.didntReceiveCode') }}</span>
-                  <a href="#" @click.prevent="resendCode" class="forgot-password-link text-decoration-none ml-1">
+                  <a
+                    href="#"
+                    @click.prevent="resendCode"
+                    class="forgot-password-link text-decoration-none ml-1"
+                  >
                     {{ t('auth.resend') }}
                   </a>
                 </div>
@@ -82,7 +81,7 @@
                   class="mb-4"
                   hide-details="auto"
                   :type="showPassword ? 'text' : 'password'"
-                  :rules="[v => !!v || t('auth.passwordRequired')]"
+                  :rules="[(v) => !!v || t('auth.passwordRequired')]"
                 >
                   <template v-slot:append-inner>
                     <v-icon
@@ -104,8 +103,8 @@
                   hide-details="auto"
                   :type="showConfirmPassword ? 'text' : 'password'"
                   :rules="[
-                    v => !!v || t('auth.confirmPasswordRequired'),
-                    v => v === newPassword || t('auth.passwordsDoNotMatch')
+                    (v) => !!v || t('auth.confirmPasswordRequired'),
+                    (v) => v === newPassword || t('auth.passwordsDoNotMatch'),
                   ]"
                 >
                   <template v-slot:append-inner>
@@ -138,18 +137,10 @@
     </v-container>
 
     <!-- Toast Messages -->
-    <v-snackbar
-      v-model="showToast"
-      :timeout="3000"
-      :color="toastColor"
-      location="top"
-    >
+    <v-snackbar v-model="showToast" :timeout="3000" :color="toastColor" location="top">
       {{ toastMessage }}
       <template v-slot:actions>
-        <v-btn
-          variant="text"
-          @click="showToast = false"
-        >
+        <v-btn variant="text" @click="showToast = false">
           {{ t('common.close') }}
         </v-btn>
       </template>
@@ -158,88 +149,88 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
-import { useRouter } from 'vue-router'
-import { useI18n } from 'vue-i18n'
+import { ref } from 'vue';
+import { useRouter } from 'vue-router';
+import { useI18n } from 'vue-i18n';
 
-const router = useRouter()
-const { t } = useI18n()
-const verifyForm = ref<any>(null)
-const resetForm = ref<any>(null)
-const loading = ref(false)
-const showToast = ref(false)
-const toastMessage = ref('')
-const toastColor = ref('info')
-const codeVerified = ref(false)
+const router = useRouter();
+const { t } = useI18n();
+const verifyForm = ref<any>(null);
+const resetForm = ref<any>(null);
+const loading = ref(false);
+const showToast = ref(false);
+const toastMessage = ref('');
+const toastColor = ref('info');
+const codeVerified = ref(false);
 
 // Verification code step
-const verificationCode = ref('')
+const verificationCode = ref('');
 
 // Reset password step
-const newPassword = ref('')
-const confirmNewPassword = ref('')
-const showPassword = ref(false)
-const showConfirmPassword = ref(false)
+const newPassword = ref('');
+const confirmNewPassword = ref('');
+const showPassword = ref(false);
+const showConfirmPassword = ref(false);
 
 // Mock function to verify code
 async function handleVerifyCode() {
   // Validate form
-  const { valid } = await verifyForm.value.validate()
+  const { valid } = await verifyForm.value.validate();
   if (!valid) {
-    showToast.value = true
-    toastMessage.value = t('auth.fillAllFields')
-    toastColor.value = 'error'
-    return
+    showToast.value = true;
+    toastMessage.value = t('auth.fillAllFields');
+    toastColor.value = 'error';
+    return;
   }
 
-  loading.value = true
+  loading.value = true;
 
   // Simulate API call
   setTimeout(() => {
-    loading.value = false
+    loading.value = false;
 
     // For demo purposes, any code is accepted
-    codeVerified.value = true
+    codeVerified.value = true;
 
-    showToast.value = true
-    toastMessage.value = 'Code verified successfully'
-    toastColor.value = 'success'
-  }, 1500)
+    showToast.value = true;
+    toastMessage.value = 'Code verified successfully';
+    toastColor.value = 'success';
+  }, 1500);
 }
 
 // Mock function to resend code
 function resendCode() {
-  showToast.value = true
-  toastMessage.value = 'A new verification code has been sent to your email'
-  toastColor.value = 'info'
+  showToast.value = true;
+  toastMessage.value = 'A new verification code has been sent to your email';
+  toastColor.value = 'info';
 }
 
 // Mock function to reset password
 async function handleResetPassword() {
   // Validate form
-  const { valid } = await resetForm.value.validate()
+  const { valid } = await resetForm.value.validate();
   if (!valid) {
-    showToast.value = true
-    toastMessage.value = t('auth.fillAllFields')
-    toastColor.value = 'error'
-    return
+    showToast.value = true;
+    toastMessage.value = t('auth.fillAllFields');
+    toastColor.value = 'error';
+    return;
   }
 
-  loading.value = true
+  loading.value = true;
 
   // Simulate API call
   setTimeout(() => {
-    loading.value = false
+    loading.value = false;
 
-    showToast.value = true
-    toastMessage.value = 'Password has been reset successfully'
-    toastColor.value = 'success'
+    showToast.value = true;
+    toastMessage.value = 'Password has been reset successfully';
+    toastColor.value = 'success';
 
     // Redirect to login after successful password reset
     setTimeout(() => {
-      router.push('/login')
-    }, 1500)
-  }, 1500)
+      router.push('/login');
+    }, 1500);
+  }, 1500);
 }
 </script>
 

@@ -79,20 +79,20 @@
 </template>
 
 <script setup lang="ts">
-import { useAuthStore } from '../stores/auth'
-import { useI18n } from 'vue-i18n'
-import LanguageSwitcher from './LanguageSwitcher.vue'
-import { computed } from 'vue'
-import { useRoute } from 'vue-router'
+import { useAuthStore } from '../stores/auth';
+import { useI18n } from 'vue-i18n';
+import LanguageSwitcher from './LanguageSwitcher.vue';
+import { computed } from 'vue';
+import { useRoute } from 'vue-router';
 
-const route = useRoute()
-const authStore = useAuthStore()
-const { t } = useI18n()
+const route = useRoute();
+const authStore = useAuthStore();
+const { t } = useI18n();
 
 // 检查当前路由是否是认证页面
 const isAuthPage = computed(() => {
-  return ['/login', '/register', '/forgot-password', '/reset-password'].includes(route.path)
-})
+  return ['/login', '/register', '/forgot-password', '/reset-password'].includes(route.path);
+});
 </script>
 
 <style scoped>

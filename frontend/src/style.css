@@ -1,4 +1,4 @@
-@import "tailwindcss";
+@import 'tailwindcss';
 
 :root {
   font-family: 'Poppins', system-ui, Avenir, Helvetica, Arial, sans-serif;
@@ -7,7 +7,7 @@
 
   color-scheme: light;
   color: #313131;
-  background-color: #FFFFFF;
+  background-color: #ffffff;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -36,7 +36,7 @@ body.auth-page {
 .auth-container {
   display: flex;
   height: 100vh;
-  background-color: #F6F6F6;
+  background-color: #f6f6f6;
   overflow: hidden; /* 禁止滚动 */
   position: fixed;
   top: 0;
@@ -94,19 +94,19 @@ body.auth-page {
 
 .social-login-btn:hover {
   background-color: rgba(141, 211, 187, 0.1);
-  border-color: #8DD3BB;
+  border-color: #8dd3bb;
   transform: translateY(-2px);
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .forgot-password-link {
-  color: #8DD3BB;
+  color: #8dd3bb;
   text-decoration: none;
   font-weight: 500;
 }
 
 .signup-link {
-  color: #8DD3BB;
+  color: #8dd3bb;
   text-decoration: none;
   font-weight: 600;
 }

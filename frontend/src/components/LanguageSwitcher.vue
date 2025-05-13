@@ -1,11 +1,7 @@
 <template>
   <v-menu>
     <template v-slot:activator="{ props }">
-      <v-btn
-        icon
-        v-bind="props"
-        :class="isAuthPage ? 'text-secondary' : 'text-white'"
-      >
+      <v-btn icon v-bind="props" :class="isAuthPage ? 'text-secondary' : 'text-white'">
         <v-icon>mdi-translate</v-icon>
       </v-btn>
     </template>
@@ -27,22 +23,22 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
-import { useI18n } from 'vue-i18n'
-import { setLocale } from '../i18n'
-import { useRoute } from 'vue-router'
+import { computed } from 'vue';
+import { useI18n } from 'vue-i18n';
+import { setLocale } from '../i18n';
+import { useRoute } from 'vue-router';
 
-const route = useRoute()
-const { t, locale } = useI18n()
+const route = useRoute();
+const { t, locale } = useI18n();
 
-const currentLocale = computed(() => locale.value)
+const currentLocale = computed(() => locale.value);
 
 // 检查当前路由是否是认证页面
 const isAuthPage = computed(() => {
-  return ['/login', '/register', '/forgot-password', '/reset-password'].includes(route.path)
-})
+  return ['/login', '/register', '/forgot-password', '/reset-password'].includes(route.path);
+});
 
 function changeLocale(newLocale: string) {
-  setLocale(newLocale)
+  setLocale(newLocale);
 }
 </script>

@@ -4,7 +4,6 @@
       <v-row justify="center" align="center" class="h-100">
         <v-col cols="12" sm="10" md="8" lg="6" xl="4">
           <v-card class="auth-card" elevation="0">
-
             <!-- Forgot Password Form -->
             <v-card-text class="px-6 pt-6 pb-4">
               <!-- Back to Login Link -->
@@ -33,7 +32,7 @@
                   density="comfortable"
                   class="mb-6"
                   hide-details="auto"
-                  :rules="[v => !!v || t('auth.emailRequired')]"
+                  :rules="[(v) => !!v || t('auth.emailRequired')]"
                 ></v-text-field>
 
                 <!-- Submit Button -->
@@ -59,10 +58,20 @@
                 <!-- Social Login Buttons -->
                 <div class="d-flex justify-space-between mb-4">
                   <v-btn variant="outlined" class="social-login-btn" width="30%" height="48">
-                    <img src="@/assets/images/facebook-icon.svg" alt="Facebook" width="32" height="32" />
+                    <img
+                      src="@/assets/images/facebook-icon.svg"
+                      alt="Facebook"
+                      width="32"
+                      height="32"
+                    />
                   </v-btn>
                   <v-btn variant="outlined" class="social-login-btn" width="30%" height="48">
-                    <img src="@/assets/images/google-icon.svg" alt="Google" width="32" height="32" />
+                    <img
+                      src="@/assets/images/google-icon.svg"
+                      alt="Google"
+                      width="32"
+                      height="32"
+                    />
                   </v-btn>
                   <v-btn variant="outlined" class="social-login-btn" width="30%" height="48">
                     <img src="@/assets/images/apple-icon.svg" alt="Apple" width="32" height="32" />
@@ -76,36 +85,20 @@
     </v-container>
 
     <!-- Success Toast -->
-    <v-snackbar
-      v-model="showSuccessToast"
-      :timeout="3000"
-      color="success"
-      location="top"
-    >
+    <v-snackbar v-model="showSuccessToast" :timeout="3000" color="success" location="top">
       {{ successMessage }}
       <template v-slot:actions>
-        <v-btn
-          variant="text"
-          @click="showSuccessToast = false"
-        >
+        <v-btn variant="text" @click="showSuccessToast = false">
           {{ t('common.close') }}
         </v-btn>
       </template>
     </v-snackbar>
 
     <!-- Error Toast -->
-    <v-snackbar
-      v-model="showErrorToast"
-      :timeout="3000"
-      color="error"
-      location="top"
-    >
+    <v-snackbar v-model="showErrorToast" :timeout="3000" color="error" location="top">
       {{ errorMessage }}
       <template v-slot:actions>
-        <v-btn
-          variant="text"
-          @click="showErrorToast = false"
-        >
+        <v-btn variant="text" @click="showErrorToast = false">
           {{ t('common.close') }}
         </v-btn>
       </template>
@@ -114,51 +107,54 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from 'vue'
-import { useRouter } from 'vue-router'
-import { useAuthStore } from '../stores/auth'
-import { useI18n } from 'vue-i18n'
+import { ref, watch } from 'vue';
+import { useRouter } from 'vue-router';
+import { useAuthStore } from '../stores/auth';
+import { useI18n } from 'vue-i18n';
 
-const router = useRouter()
-const authStore = useAuthStore()
-const { t } = useI18n()
-const form = ref<any>(null)
-const showErrorToast = ref(false)
-const errorMessage = ref('')
-const showSuccessToast = ref(false)
-const successMessage = ref('')
-const email = ref('')
+const router = useRouter();
+const authStore = useAuthStore();
+const { t } = useI18n();
+const form = ref<any>(null);
+const showErrorToast = ref(false);
+const errorMessage = ref('');
+const showSuccessToast = ref(false);
+const successMessage = ref('');
+const email = ref('');
 
 // Watch for auth store errors
-watch(() => authStore.error, (newError) => {
-  if (newError) {
-    errorMessage.value = newError
-    showErrorToast.value = true
-  }
-})
+watch(
+  () => authStore.error,
+  (newError) => {
+    if (newError) {
+      errorMessage.value = newError;
+      showErrorToast.value = true;
+    }
+  },
+);
 
 async function handleForgotPassword() {
   // Validate form
-  const { valid } = await form.value.validate()
+  const { valid } = await form.value.validate();
   if (!valid) {
     // Show error message if validation fails
-    errorMessage.value = t('auth.fillAllFields')
-    showErrorToast.value = true
-    return
+    errorMessage.value = t('auth.fillAllFields');
+    showErrorToast.value = true;
+    return;
   }
 
   // Attempt to request password reset
-  const success = await authStore.requestPasswordReset(email.value)
+  const success = await authStore.requestPasswordReset(email.value);
   if (success) {
     // Show success message
-    successMessage.value = 'Password reset link has been sent to your email'
-    showSuccessToast.value = true
+    successMessage.value = 'Password reset link has been sent to your email';
+    showSuccessToast.value = true;
 
     // In a real application, you might redirect to a verification page
     // For now, we'll just redirect back to login after a delay
     setTimeout(() => {
-      router.push('/login')
-    }, 3000)
+      router.push('/login');
+    }, 3000);
   }
 }
 </script>

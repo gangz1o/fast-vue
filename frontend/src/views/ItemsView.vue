@@ -52,11 +52,7 @@
               </div>
 
               <!-- Error State -->
-              <v-alert
-                v-if="itemsStore.error"
-                type="error"
-                class="mb-4"
-              >
+              <v-alert v-if="itemsStore.error" type="error" class="mb-4">
                 {{ itemsStore.error }}
               </v-alert>
 
@@ -97,11 +93,7 @@
               </v-list>
 
               <!-- Empty State -->
-              <v-alert
-                v-else-if="!itemsStore.loading"
-                type="info"
-                class="mb-4"
-              >
+              <v-alert v-else-if="!itemsStore.loading" type="info" class="mb-4">
                 {{ t('items.noItems') }}
               </v-alert>
             </v-card-text>
@@ -113,54 +105,54 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
-import { useItemsStore, type Item, type ItemCreate } from '../stores/items'
-import { useI18n } from 'vue-i18n'
+import { ref, onMounted } from 'vue';
+import { useItemsStore, type Item, type ItemCreate } from '../stores/items';
+import { useI18n } from 'vue-i18n';
 
-const itemsStore = useItemsStore()
-const { t } = useI18n()
+const itemsStore = useItemsStore();
+const { t } = useI18n();
 
 const newItem = ref<ItemCreate>({
   title: '',
   description: '',
-  completed: false
-})
+  completed: false,
+});
 
 onMounted(async () => {
-  await itemsStore.fetchItems()
-})
+  await itemsStore.fetchItems();
+});
 
 async function addNewItem() {
-  if (!newItem.value.title) return
+  if (!newItem.value.title) return;
 
   try {
-    await itemsStore.addItem(newItem.value)
+    await itemsStore.addItem(newItem.value);
     // Reset form
     newItem.value = {
       title: '',
       description: '',
-      completed: false
-    }
+      completed: false,
+    };
   } catch (error) {
-    console.error('Failed to add item:', error)
+    console.error('Failed to add item:', error);
   }
 }
 
 async function toggleItemStatus(item: Item) {
   try {
     await itemsStore.updateItem(item.id, {
-      completed: item.completed
-    })
+      completed: item.completed,
+    });
   } catch (error) {
-    console.error('Failed to update item status:', error)
+    console.error('Failed to update item status:', error);
   }
 }
 
 async function deleteItemById(id: number) {
   try {
-    await itemsStore.deleteItem(id)
+    await itemsStore.deleteItem(id);
   } catch (error) {
-    console.error('Failed to delete item:', error)
+    console.error('Failed to delete item:', error);
   }
 }
 </script>

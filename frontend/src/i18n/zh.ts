@@ -105,4 +105,4 @@ export default {
     designedFor: '此模板旨在帮助您使用现代技术栈快速启动新项目。',
     backToHome: '返回首页',
   },
-}
+};
